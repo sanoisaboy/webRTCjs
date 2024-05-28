@@ -1,13 +1,25 @@
+
 const express = require("express");
 const socket = require("socket.io");
+const fs = require('fs');
 const app = express();
-
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('selfsigned.key', 'utf8');
+var certificate = fs.readFileSync('selfsigned.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
 //Starts the server
 
+var httpServer = http.createServer(app);
+var server = https.createServer(credentials, app);
+
+httpServer.listen(8080);
+server.listen(3002);
+/*
 let server = app.listen(3002, function () {
     console.log("Server is running");
 });
-
+*/
 app.use(express.static("lib"));
 
 //Upgrades the server to accept websockets.
